@@ -1,7 +1,35 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ExternalLink, Github } from 'lucide-react';
+import { ExternalLink, Github, Play, Calculator as CalcIcon, Palette, ListTodo } from 'lucide-react';
+import { Calculator, ColorPicker, TodoList, DemoModal } from './MiniProjects';
 
 export default function Projects() {
+    const [activeDemo, setActiveDemo] = useState(null);
+
+    const miniProjects = [
+        {
+            title: 'Interactive Calculator',
+            description: 'A fully functional calculator with basic operations',
+            icon: <CalcIcon className="text-cyan-400" size={32} />,
+            gradient: 'from-purple-500 to-blue-500',
+            component: <Calculator />
+        },
+        {
+            title: 'Color Picker Tool',
+            description: 'Pick, generate, and copy color codes instantly',
+            icon: <Palette className="text-pink-400" size={32} />,
+            gradient: 'from-pink-500 to-purple-500',
+            component: <ColorPicker />
+        },
+        {
+            title: 'Todo List App',
+            description: 'Simple and elegant task management',
+            icon: <ListTodo className="text-cyan-400" size={32} />,
+            gradient: 'from-cyan-500 to-blue-500',
+            component: <TodoList />
+        }
+    ];
+
     const projects = [
         {
             title: 'AI-Powered Dashboard',
@@ -100,6 +128,42 @@ export default function Projects() {
                     </p>
                 </motion.div>
 
+                {/* Interactive Mini Projects */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
+                    className="mb-20"
+                >
+                    <h3 className="text-2xl md:text-3xl font-bold mb-8 text-center">
+                        <span className="text-cyan-400">🎮 Try Interactive Demos</span>
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        {miniProjects.map((demo, index) => (
+                            <motion.div
+                                key={index}
+                                whileHover={{ y: -5, scale: 1.02 }}
+                                className="relative group cursor-pointer"
+                                onClick={() => setActiveDemo(demo)}
+                            >
+                                <div className={`absolute inset-0 bg-gradient-to-br ${demo.gradient} opacity-20 group-hover:opacity-30 rounded-xl blur-xl transition-opacity`} />
+                                <div className="relative glass-card p-6 text-center">
+                                    <div className="flex justify-center mb-4">
+                                        {demo.icon}
+                                    </div>
+                                    <h4 className="text-xl font-bold text-white mb-2">{demo.title}</h4>
+                                    <p className="text-gray-400 text-sm mb-4">{demo.description}</p>
+                                    <button className="flex items-center gap-2 mx-auto px-4 py-2 bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 rounded-lg transition-all border border-cyan-500/30">
+                                        <Play size={16} />
+                                        Try Now
+                                    </button>
+                                </div>
+                            </motion.div>
+                        ))}
+                    </div>
+                </motion.div>
+
                 {/* Projects Grid */}
                 <motion.div
                     variants={containerVariants}
@@ -166,6 +230,12 @@ export default function Projects() {
                     ))}
                 </motion.div>
             </div>
+
+            {/* Demo Modal */}
+            {activeDemo && (
+                <DemoModal demo={activeDemo} onClose={() => setActiveDemo(null)} />
+            )}
         </section>
     );
 }
+
